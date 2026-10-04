@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deriv Match Analyzer</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #10131a;
+      color: white;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .box {
+      max-width: 500px;
+      margin: auto;
+      background: #191e29;
+      padding: 20px;
+      border-radius: 16px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+    }
+
+    button {
+      background: #00c853;
+      color: white;
+      font-weight: bold;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      background: #0d1117;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .digit {
+      font-size: 55px;
+      font-weight: bold;
+      margin: 10px;
+    }
+
+    .status {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .digits {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 15px;
+    }
+
+    .digitBox {
+      background: #252b36;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .small {
+      color: #aaa;
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <h1>DERIV MATCH ANALYZER</h1>
+
+  <div class="small">Free live-tick statistical analyzer</div>
+
+  <select id="market">
+    <option value="R_100">Volatility 100 Index</option>
+    <option value="R_75">Volatility 75 Index</option>
+    <option value="R_50">Volatility 50 Index</option>
+    <option value="R_25">Volatility 25 Index</option>
+    <option value="R_10">Volatility 10 Index</option>
+  </select>
+
+  <button onclick="startAnalyzer()">ANALYZE</button>
+
+  <div class="result">
+
+    <div>LIVE STATUS</div>
+    <div id="status" class="status">WAITING</div>
+
+    <div class="small">MATCH DIGIT</div>
+
+    <div id="prediction" class="digit">-</div>
+
+    <div>
+      Ticks collected:
+      <span id="tickCount">0</span>
+    </div>
+
+    <div class="digits" id="digitStats"></div>
+
+  </div>
+
+</div>
+
+<script>
+
+let socket;
+let ticks = [];
+
+function startAnalyzer() {
+
+  const symbol = document.getElementById("market").value;
+
+  ticks = [];
+
+  document.getElementById("status").innerText =
+    "CONNECTING...";
+
+  document.getElementById("prediction").innerText = "-";
+
+  if (socket) {
+    socket.close();
+  }
+
+  socket = new WebSocket(
+    "wss://ws.binaryws.com/websockets/v3?app_id=1089"
+  );
+
+  socket.onopen = function() {
+
+    document.getElementById("status").innerText =
+      "CONNECTED — SCANNING";
+
+    socket.send(JSON.stringify({
+      ticks: symbol,
+      subscribe: 1
+    }));
+
+  };
+
+  socket.onmessage = function(event) {
+
+    const data = JSON.parse(event.data);
+
+    if (!data.tick) return;
+
+    const quote = String(data.tick.quote);
+
+    const lastCharacter =
+      quote.replace(".", "").slice(-1);
+
+    const digit = Number(lastCharacter);
+
+    if (digit >= 0 && digit <= 9) {
+
+      ticks.push(digit);
+
+      if (ticks.length > 500) {
+        ticks.shift();
+      }
+
+      updateAnalyzer();
+    }
+
+  };
+
+  socket.onerror = function() {
+
+    document.getElementById("status").innerText =
+      "CONNECTION ERROR";
+
+  };
+
+  socket.onclose = function() {
+
+    document.getElementById("status").innerText =
+      "DISCONNECTED";
+
+  };
+
+}
+
+function updateAnalyzer() {
+
+  document.getElementById("tickCount").innerText =
+    ticks.length;
+
+  const counts = Array(10).fill(0);
+
+  ticks.forEach(function(digit) {
+    counts[digit]++;
+  });
+
+  let bestDigit = 0;
+  let bestCount = -1;
+
+  for (let i = 0; i < 10; i++) {
+
+    if (counts[i] > bestCount) {
+      bestCount = counts[i];
+      bestDigit = i;
+    }
+
+  }
+
+  document.getElementById("prediction").innerText =
+    bestDigit;
+
+  const percentage =
+    ticks.length > 0
+    ? ((bestCount / ticks.length) * 100).toFixed(1)
+    : 0;
+
+  document.getElementById("status").innerText =
+    "SCANNING — " + percentage + "% historical frequency";
+
+  let html = "";
+
+  for (let i = 0; i < 10; i++) {
+
+    const percent =
+      ticks.length > 0
+      ? ((counts[i] / ticks.length) * 100).toFixed(1)
+      : 0;
+
+    html += `
+      <div class="digitBox">
+        <b>${i}</b><br>
+        ${counts[i]}<br>
+        <span class="small">${percent}%</span>
+      </div>
+    `;
+
+  }
+
+  document.getElementById("digitStats").innerHTML =
+    html;
+
+}
+
+</script>
+
+</body>
+      </html>
