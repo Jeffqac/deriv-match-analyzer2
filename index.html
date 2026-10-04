@@ -1,9 +1,10 @@
- html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Deriv Match Analyzer</title>
+
+<title>Deriv Digit Match Analyzer</title>
 
 <style>
 * {
@@ -12,13 +13,12 @@
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
   background: #080b12;
-  color: white;
+  color: #fff;
+  font-family: Arial, sans-serif;
 }
 
 .container {
-  width: 100%;
   max-width: 700px;
   margin: auto;
   padding: 18px;
@@ -31,13 +31,13 @@ h1 {
 
 .subtitle {
   text-align: center;
-  color: #9ca3af;
+  color: #9aa4b2;
   margin-bottom: 20px;
 }
 
 .card {
   background: #111722;
-  border: 1px solid #252d3a;
+  border: 1px solid #293242;
   border-radius: 15px;
   padding: 16px;
   margin-bottom: 15px;
@@ -45,8 +45,8 @@ h1 {
 
 label {
   display: block;
+  color: #aeb7c5;
   margin-bottom: 7px;
-  color: #aab3c2;
 }
 
 select,
@@ -54,12 +54,12 @@ button {
   width: 100%;
   padding: 14px;
   border-radius: 10px;
-  border: none;
+  border: 0;
   font-size: 16px;
 }
 
 select {
-  background: #1a2230;
+  background: #1b2330;
   color: white;
   margin-bottom: 12px;
 }
@@ -68,48 +68,42 @@ button {
   background: #00c853;
   color: white;
   font-weight: bold;
-  cursor: pointer;
-}
-
-button:active {
-  transform: scale(.98);
 }
 
 .status {
   text-align: center;
-  padding: 12px;
+  padding: 13px;
   border-radius: 10px;
-  background: #171d28;
   margin-bottom: 15px;
+  background: #171d28;
 }
 
-.connected {
+.green {
   color: #00e676;
 }
 
-.disconnected {
-  color: #ff5252;
-}
-
-.warning {
+.yellow {
   color: #ffd740;
 }
 
-.main-signal {
+.red {
+  color: #ff5252;
+}
+
+.signal {
   text-align: center;
-  padding: 20px;
   background: #151c29;
   border-radius: 14px;
+  padding: 20px;
 }
 
-.signal-digit {
-  font-size: 70px;
+.signalDigit {
+  font-size: 72px;
   font-weight: bold;
-  margin: 8px 0;
+  margin: 10px;
 }
 
-.signal-score {
-  font-size: 20px;
+.score {
   color: #00e676;
 }
 
@@ -121,56 +115,53 @@ button:active {
 
 .stat {
   background: #171e2b;
-  padding: 13px;
   border-radius: 10px;
+  padding: 12px;
 }
 
-.stat-title {
-  color: #8f9aaa;
+.statTitle {
+  color: #8f99a8;
   font-size: 13px;
 }
 
-.stat-value {
-  font-size: 20px;
-  margin-top: 5px;
+.statValue {
+  font-size: 19px;
   font-weight: bold;
+  margin-top: 5px;
 }
 
 .digits {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 7px;
-  margin-top: 10px;
 }
 
-.digit-box {
+.digit {
   background: #171e2b;
-  padding: 10px 5px;
+  border-radius: 9px;
   text-align: center;
-  border-radius: 8px;
+  padding: 10px 3px;
 }
 
-.digit-number {
+.digitNumber {
   font-size: 20px;
   font-weight: bold;
 }
 
-.digit-percent {
-  font-size: 11px;
+.small {
   color: #9ca3af;
-  margin-top: 4px;
+  font-size: 11px;
 }
 
 .recent {
-  word-break: break-all;
-  line-height: 1.8;
-  color: #d7dce5;
+  line-height: 2;
+  word-break: break-word;
 }
 
 .error {
   color: #ff5252;
   font-size: 13px;
-  margin-top: 10px;
+  margin-top: 12px;
   word-break: break-word;
 }
 </style>
@@ -180,98 +171,121 @@ button:active {
 
 <div class="container">
 
-  <h1>Deriv Match Analyzer</h1>
-  <div class="subtitle">Live Digit Matches Analyzer</div>
+<h1>Deriv Digit Match Analyzer</h1>
 
-  <div class="card">
+<div class="subtitle">
+Live Volatility Index Analysis
+</div>
 
-    <label>Select Market</label>
+<div class="card">
 
-    <select id="market">
-      <option value="R_100">Volatility 100 Index</option>
-      <option value="R_75">Volatility 75 Index</option>
-      <option value="R_50">Volatility 50 Index</option>
-      <option value="R_25">Volatility 25 Index</option>
-      <option value="R_10">Volatility 10 Index</option>
-    </select>
+<label>Select Market</label>
 
-    <button onclick="startAnalyzer()">ANALYZE</button>
+<select id="market">
 
-  </div>
+<option value="1HZ100V">
+Volatility 100 Index
+</option>
 
-  <div id="status" class="status disconnected">
-    Disconnected
-  </div>
+<option value="1HZ75V">
+Volatility 75 Index
+</option>
 
-  <div class="card main-signal">
+<option value="1HZ50V">
+Volatility 50 Index
+</option>
 
-    <div>BEST MATCH CANDIDATE</div>
+<option value="1HZ25V">
+Volatility 25 Index
+</option>
 
-    <div id="signalDigit" class="signal-digit">-</div>
+<option value="1HZ10V">
+Volatility 10 Index
+</option>
 
-    <div id="signalScore" class="signal-score">
-      Waiting for ticks...
-    </div>
+</select>
 
-  </div>
+<button id="analyze">
+ANALYZE
+</button>
 
-  <div class="card">
+</div>
 
-    <div class="grid">
+<div id="status" class="status yellow">
+Ready — press ANALYZE
+</div>
 
-      <div class="stat">
-        <div class="stat-title">Market</div>
-        <div id="marketName" class="stat-value">-</div>
-      </div>
+<div class="card signal">
 
-      <div class="stat">
-        <div class="stat-title">Ticks</div>
-        <div id="tickCount" class="stat-value">0</div>
-      </div>
+<div>BEST MATCH CANDIDATE</div>
 
-      <div class="stat">
-        <div class="stat-title">Last Price</div>
-        <div id="lastPrice" class="stat-value">-</div>
-      </div>
+<div id="signalDigit" class="signalDigit">
+-
+</div>
 
-      <div class="stat">
-        <div class="stat-title">Last Digit</div>
-        <div id="lastDigit" class="stat-value">-</div>
-      </div>
+<div id="score" class="score">
+Waiting for live ticks
+</div>
 
-      <div class="stat">
-        <div class="stat-title">Current Gap</div>
-        <div id="currentGap" class="stat-value">-</div>
-      </div>
+</div>
 
-      <div class="stat">
-        <div class="stat-title">Average Jump</div>
-        <div id="avgJump" class="stat-value">-</div>
-      </div>
+<div class="card">
 
-    </div>
+<div class="grid">
 
-  </div>
+<div class="stat">
+<div class="statTitle">Market</div>
+<div id="marketName" class="statValue">-</div>
+</div>
 
-  <div class="card">
+<div class="stat">
+<div class="statTitle">Ticks</div>
+<div id="tickCount" class="statValue">0</div>
+</div>
 
-    <h3>Digit Matches</h3>
+<div class="stat">
+<div class="statTitle">Last Price</div>
+<div id="lastPrice" class="statValue">-</div>
+</div>
 
-    <div id="digits" class="digits"></div>
+<div class="stat">
+<div class="statTitle">Last Digit</div>
+<div id="lastDigit" class="statValue">-</div>
+</div>
 
-  </div>
+<div class="stat">
+<div class="statTitle">Current Gap</div>
+<div id="gap" class="statValue">-</div>
+</div>
 
-  <div class="card">
+<div class="stat">
+<div class="statTitle">Average Jump</div>
+<div id="jump" class="statValue">-</div>
+</div>
 
-    <h3>Recent Digits</h3>
+</div>
 
-    <div id="recent" class="recent">
-      Waiting for data...
-    </div>
+</div>
 
-    <div id="error" class="error"></div>
+<div class="card">
 
-  </div>
+<h3>Digit Matches</h3>
+
+<div id="digits" class="digits"></div>
+
+</div>
+
+<div class="card">
+
+<h3>Recent Digits</h3>
+
+<div id="recent" class="recent">
+-
+</div>
+
+<div id="error" class="error"></div>
+
+</div>
 
 </div>
 
@@ -280,62 +294,61 @@ button:active {
 
 let socket = null;
 
-let ticks = [];
+let symbol = "1HZ100V";
 
-let prices = [];
+let digitList = [];
 
-let counts = Array(10).fill(0);
+let priceList = [];
 
-let lastSeen = Array(10).fill(-1);
+let counts = new Array(10).fill(0);
 
-let marketSymbol = "R_100";
+let lastSeen = new Array(10).fill(-1);
 
 let reconnectTimer = null;
+
+let reconnectAttempts = 0;
 
 const MAX_TICKS = 500;
 
 
+/* =========================
+   STATUS
+========================= */
+
 function setStatus(text, type) {
 
-  const status = document.getElementById("status");
+  const el =
+    document.getElementById("status");
 
-  status.textContent = text;
+  el.textContent = text;
 
-  status.className = "status " + type;
+  el.className =
+    "status " + type;
+
 }
 
 
-function showError(message) {
+function setError(text) {
 
   document.getElementById("error").textContent =
-    message ? "Deriv error: " + message : "";
+    text || "";
 
 }
 
 
-function startAnalyzer() {
+/* =========================
+   RESET
+========================= */
 
-  marketSymbol = document.getElementById("market").value;
+function resetAnalyzer() {
 
-  resetData();
+  digitList = [];
 
-  document.getElementById("marketName").textContent =
-    getMarketName(marketSymbol);
+  priceList = [];
 
-  connect();
+  counts = new Array(10).fill(0);
 
-}
-
-
-function resetData() {
-
-  ticks = [];
-
-  prices = [];
-
-  counts = Array(10).fill(0);
-
-  lastSeen = Array(10).fill(-1);
+  lastSeen = new Array(10).fill(-1);
 
   document.getElementById("tickCount").textContent = "0";
 
@@ -343,45 +356,27 @@ function resetData() {
 
   document.getElementById("lastDigit").textContent = "-";
 
-  document.getElementById("currentGap").textContent = "-";
+  document.getElementById("gap").textContent = "-";
 
-  document.getElementById("avgJump").textContent = "-";
+  document.getElementById("jump").textContent = "-";
 
   document.getElementById("signalDigit").textContent = "-";
 
-  document.getElementById("signalScore").textContent =
-    "Waiting for ticks...";
+  document.getElementById("score").textContent =
+    "Waiting for live ticks";
 
-  document.getElementById("recent").textContent =
-    "Waiting for data...";
+  document.getElementById("recent").textContent = "-";
 
-  showError("");
+  setError("");
 
   renderDigits();
 
 }
 
 
-function getMarketName(symbol) {
-
-  const names = {
-
-    "R_100": "Volatility 100",
-
-    "R_75": "Volatility 75",
-
-    "R_50": "Volatility 50",
-
-    "R_25": "Volatility 25",
-
-    "R_10": "Volatility 10"
-
-  };
-
-  return names[symbol] || symbol;
-
-}
-
+/* =========================
+   CONNECT
+========================= */
 
 function connect() {
 
@@ -389,40 +384,83 @@ function connect() {
 
     try {
       socket.close();
-    } catch(e) {}
+    } catch (e) {}
 
   }
 
-  setStatus("Connecting to Deriv...", "warning");
+  clearTimeout(reconnectTimer);
+
+  setStatus(
+    "Connecting to Deriv...",
+    "yellow"
+  );
+
+  setError("");
+
 
   /*
-    Current Deriv WebSocket host.
+    This is the public WebSocket
+    endpoint shown in Deriv's
+    official browser examples.
   */
 
-  const url =
-    "wss://ws.derivws.com/websockets/v3?app_id=1089";
-
-  socket = new WebSocket(url);
+  socket = new WebSocket(
+    "wss://ws.binaryws.com/websockets/v3"
+  );
 
 
   socket.onopen = function() {
 
-    setStatus("Connected — finding market...", "connected");
+    reconnectAttempts = 0;
 
-    showError("");
+    setStatus(
+      "Connected — receiving live ticks",
+      "green"
+    );
+
 
     /*
-      First request active symbols.
-      This prevents subscribing to an invalid/stale symbol.
+      Direct tick subscription.
+
+      No login.
+      No token.
+      No App ID.
+      No backend.
     */
 
-    socket.send(JSON.stringify({
+    socket.send(
+      JSON.stringify({
 
-      active_symbols: "brief",
+        ticks: symbol,
 
-      product_type: "basic"
+        subscribe: 1,
 
-    }));
+        req_id: 1
+
+      })
+    );
+
+
+    /*
+      Also request recent history
+      to populate the analyzer faster.
+    */
+
+    socket.send(
+      JSON.stringify({
+
+        ticks_history: symbol,
+
+        count: 100,
+
+        end: "latest",
+
+        style: "ticks",
+
+        req_id: 2
+
+      })
+    );
 
   };
 
@@ -433,87 +471,31 @@ function connect() {
 
     try {
 
-      data = JSON.parse(event.data);
+      data =
+        JSON.parse(event.data);
 
-    } catch(e) {
+    } catch (e) {
 
       return;
 
     }
 
+
+    /*
+      Show the REAL Deriv error.
+    */
 
     if (data.error) {
 
-      showError(data.error.message || "Unknown Deriv error");
-
-      setStatus("Deriv connection error", "disconnected");
-
-      return;
-
-    }
-
-
-    /*
-      Find the selected market from active symbols.
-    */
-
-    if (data.msg_type === "active_symbols") {
-
-      const symbols = data.active_symbols || [];
-
-      let found = symbols.find(
-        s => s.symbol === marketSymbol
-      );
-
-      /*
-        Some responses may use display_name.
-      */
-
-      if (!found) {
-
-        found = symbols.find(
-          s =>
-            s.display_name &&
-            s.display_name
-              .toLowerCase()
-              .includes(
-                getMarketName(marketSymbol).toLowerCase()
-              )
-        );
-
-      }
-
-
-      if (!found) {
-
-        showError(
-          "Selected market was not found in Deriv active symbols."
-        );
-
-        setStatus("Market unavailable", "disconnected");
-
-        return;
-
-      }
-
-
-      marketSymbol = found.symbol;
-
       setStatus(
-        "Connected — subscribing to " +
-        (found.display_name || marketSymbol),
-        "connected"
+        "Deriv returned an error",
+        "red"
       );
 
-
-      socket.send(JSON.stringify({
-
-        ticks: marketSymbol,
-
-        subscribe: 1
-
-      }));
-
+      setError(
+        data.error.message ||
+        JSON.stringify(data.error)
+      );
 
       return;
 
@@ -521,12 +503,48 @@ function connect() {
 
 
     /*
-      Live tick received.
+      Historical data.
     */
 
-    if (data.msg_type === "tick" && data.tick) {
+    if (
+      data.msg_type === "history" &&
+      data.history
+    ) {
 
-      processTick(data.tick);
+      const prices =
+        data.history.prices || [];
+
+      for (
+        let i = 0;
+        i < prices.length;
+        i++
+      ) {
+
+        processTick(
+          prices[i],
+          false
+        );
+
+      }
+
+      return;
+
+    }
+
+
+    /*
+      Live tick.
+    */
+
+    if (
+      data.msg_type === "tick" &&
+      data.tick
+    ) {
+
+      processTick(
+        data.tick.quote,
+        true
+      );
 
     }
 
@@ -535,7 +553,14 @@ function connect() {
 
   socket.onerror = function() {
 
-    setStatus("WebSocket error", "disconnected");
+    setStatus(
+      "WebSocket connection error",
+      "red"
+    );
+
+    setError(
+      "Your browser/network could not establish the Deriv WebSocket connection."
+    );
 
   };
 
@@ -543,107 +568,212 @@ function connect() {
   socket.onclose = function() {
 
     setStatus(
-      "Disconnected — reconnecting...",
-      "disconnected"
+      "Connection closed — reconnecting...",
+      "red"
     );
+
+
+    /*
+      Automatically reconnect.
+    */
+
+    reconnectAttempts++;
+
+    const delay =
+      Math.min(
+        5000 * reconnectAttempts,
+        15000
+      );
+
 
     clearTimeout(reconnectTimer);
 
-    reconnectTimer = setTimeout(
-      connect,
-      5000
-    );
+    reconnectTimer =
+      setTimeout(
+        connect,
+        delay
+      );
 
   };
 
 }
 
 
-function processTick(tick) {
+/* =========================
+   PROCESS TICK
+========================= */
 
-  const quote = String(tick.quote);
+function processTick(
+  quote,
+  live
+) {
 
-  const price = Number(tick.quote);
+  const price =
+    Number(quote);
 
-  if (!Number.isFinite(price)) return;
+  if (
+    !Number.isFinite(price)
+  ) {
+
+    return;
+
+  }
 
 
   /*
-    Get the final decimal digit.
+    Deriv's Volatility Index
+    quote normally contains decimal
+    places.
+
+    We take the final displayed
+    decimal digit.
   */
 
-  const decimalPart =
-    quote.includes(".")
-      ? quote.split(".")[1]
-      : "";
-
+  const text =
+    String(quote);
 
   let digit;
 
-  if (decimalPart.length > 0) {
 
-    digit =
-      Number(decimalPart[decimalPart.length - 1]);
+  if (
+    text.includes(".")
+  ) {
 
-  } else {
+    const decimals =
+      text.split(".")[1];
 
-    digit =
-      Math.abs(Math.floor(price)) % 10;
+    if (
+      decimals &&
+      decimals.length > 0
+    ) {
 
-  }
+      digit =
+        Number(
+          decimals[
+            decimals.length - 1
+          ]
+        );
 
+    }
 
-  if (!Number.isInteger(digit) || digit < 0 || digit > 9) {
-    return;
   }
 
 
   /*
-    Store tick.
+    Fallback.
   */
 
-  ticks.push(digit);
+  if (
+    !Number.isInteger(digit) ||
+    digit < 0 ||
+    digit > 9
+  ) {
 
-  prices.push(price);
+    digit =
+      Math.abs(
+        Math.round(price * 100)
+      ) % 10;
+
+  }
+
+
+  digitList.push(digit);
+
+  priceList.push(price);
 
   counts[digit]++;
 
-  lastSeen[digit] = ticks.length - 1;
-
-
-  if (ticks.length > MAX_TICKS) {
-
-    const removedDigit = ticks.shift();
-
-    counts[removedDigit]--;
-
-  }
-
-
-  if (prices.length > MAX_TICKS) {
-
-    prices.shift();
-
-  }
+  lastSeen[digit] =
+    digitList.length - 1;
 
 
   /*
-    UI.
+    Keep only the newest
+    500 ticks.
   */
 
-  document.getElementById("tickCount").textContent =
-    ticks.length;
+  if (
+    digitList.length >
+    MAX_TICKS
+  ) {
 
-  document.getElementById("lastPrice").textContent =
-    quote;
+    const removed =
+      digitList.shift();
 
-  document.getElementById("lastDigit").textContent =
-    digit;
+    counts[removed]--;
+
+    lastSeen =
+      new Array(10).fill(-1);
+
+    for (
+      let i = 0;
+      i < digitList.length;
+      i++
+    ) {
+
+      lastSeen[
+        digitList[i]
+      ] = i;
+
+    }
+
+  }
+
+
+  if (
+    priceList.length >
+    MAX_TICKS
+  ) {
+
+    priceList.shift();
+
+  }
+
+
+  updateScreen();
+
+}
+
+
+/* =========================
+   UPDATE SCREEN
+========================= */
+
+function updateScreen() {
+
+  document.getElementById(
+    "tickCount"
+  ).textContent =
+    digitList.length;
+
+
+  if (priceList.length) {
+
+    document.getElementById(
+      "lastPrice"
+    ).textContent =
+      priceList[
+        priceList.length - 1
+      ];
+
+  }
+
+
+  if (digitList.length) {
+
+    document.getElementById(
+      "lastDigit"
+    ).textContent =
+      digitList[
+        digitList.length - 1
+      ];
+
+  }
 
 
   calculateGap();
 
-  calculateAverageJump();
+  calculateJump();
 
   renderDigits();
 
@@ -654,50 +784,47 @@ function processTick(tick) {
 }
 
 
+/* =========================
+   GAP
+========================= */
+
 function calculateGap() {
 
-  if (ticks.length === 0) return;
-
-
-  const lastIndex = ticks.length - 1;
-
-  let bestGap = 0;
-
-  for (let d = 0; d <= 9; d++) {
-
-    if (lastSeen[d] === -1) continue;
-
-    const gap =
-      lastIndex - lastSeen[d];
-
-    if (gap > bestGap) {
-      bestGap = gap;
-    }
-
+  if (!digitList.length) {
+    return;
   }
 
-
-  /*
-    Gap of the last digit itself.
-  */
-
-  const digit = ticks[ticks.length - 1];
+  const lastDigit =
+    digitList[
+      digitList.length - 1
+    ];
 
   const gap =
-    lastIndex - lastSeen[digit];
+    digitList.length -
+    1 -
+    lastSeen[lastDigit];
 
-  document.getElementById("currentGap").textContent =
+  document.getElementById(
+    "gap"
+  ).textContent =
     gap;
 
 }
 
 
-function calculateAverageJump() {
+/* =========================
+   JUMP
+========================= */
 
-  if (prices.length < 2) {
+function calculateJump() {
 
-    document.getElementById("avgJump").textContent =
-      "-";
+  if (
+    priceList.length < 2
+  ) {
+
+    document.getElementById(
+      "jump"
+    ).textContent = "-";
 
     return;
 
@@ -706,81 +833,187 @@ function calculateAverageJump() {
 
   let total = 0;
 
-  let n = 0;
+  let number = 0;
 
   const start =
-    Math.max(1, prices.length - 100);
-
-
-  for (let i = start; i < prices.length; i++) {
-
-    total += Math.abs(
-      prices[i] - prices[i - 1]
+    Math.max(
+      1,
+      priceList.length - 100
     );
 
-    n++;
+
+  for (
+    let i = start;
+    i < priceList.length;
+    i++
+  ) {
+
+    total +=
+      Math.abs(
+        priceList[i] -
+        priceList[i - 1]
+      );
+
+    number++;
 
   }
 
 
-  const average = n > 0 ? total / n : 0;
-
-  document.getElementById("avgJump").textContent =
-    average.toFixed(5);
+  document.getElementById(
+    "jump"
+  ).textContent =
+    (total / number).toFixed(5);
 
 }
 
 
+/* =========================
+   DIGIT TABLE
+========================= */
+
+function renderDigits() {
+
+  const box =
+    document.getElementById(
+      "digits"
+    );
+
+  box.innerHTML = "";
+
+
+  const total =
+    digitList.length;
+
+
+  for (
+    let d = 0;
+    d <= 9;
+    d++
+  ) {
+
+    const percent =
+      total
+        ? (
+            counts[d] /
+            total *
+            100
+          )
+        : 0;
+
+
+    const item =
+      document.createElement(
+        "div"
+      );
+
+    item.className =
+      "digit";
+
+
+    item.innerHTML =
+
+      "<div class='digitNumber'>" +
+      d +
+      "</div>" +
+
+      "<div>" +
+      counts[d] +
+      " matches" +
+      "</div>" +
+
+      "<div class='small'>" +
+      percent.toFixed(1) +
+      "%</div>";
+
+
+    box.appendChild(item);
+
+  }
+
+}
+
+
+/* =========================
+   RECENT DIGITS
+========================= */
+
+function renderRecent() {
+
+  const recent =
+    digitList.slice(-30);
+
+
+  document.getElementById(
+    "recent"
+  ).textContent =
+    recent.length
+      ? recent.join(" • ")
+      : "-";
+
+}
+
+
+/* =========================
+   MATCH SIGNAL
+========================= */
+
 function calculateSignal() {
 
-  if (ticks.length < 30) {
+  if (
+    digitList.length < 30
+  ) {
 
-    document.getElementById("signalDigit").textContent =
+    document.getElementById(
+      "signalDigit"
+    ).textContent =
       "-";
 
-    document.getElementById("signalScore").textContent =
-      "Collecting ticks: " + ticks.length + "/30";
+    document.getElementById(
+      "score"
+    ).textContent =
+      "Collecting ticks: " +
+      digitList.length +
+      "/30";
 
     return;
 
   }
 
 
-  const total = ticks.length;
+  const total =
+    digitList.length;
+
+  const recent =
+    digitList.slice(-50);
+
+  let results = [];
 
 
-  /*
-    Score each digit using:
-    1. Frequency
-    2. Recent frequency
-    3. Gap
+  for (
+    let d = 0;
+    d <= 9;
+    d++
+  ) {
 
-    IMPORTANT:
-    This is a statistical heuristic,
-    NOT a guaranteed prediction.
-  */
+    /*
+      Overall frequency.
+    */
 
-  let scores = [];
-
-
-  for (let d = 0; d <= 9; d++) {
-
-    const frequency =
+    const overall =
       counts[d] / total;
 
 
     /*
-      Recent 50 ticks.
+      Recent frequency.
     */
-
-    const recentWindow =
-      ticks.slice(-50);
 
     let recentCount = 0;
 
-    for (const x of recentWindow) {
+    for (
+      const value of recent
+    ) {
 
-      if (x === d) {
+      if (value === d) {
         recentCount++;
       }
 
@@ -788,7 +1021,8 @@ function calculateSignal() {
 
 
     const recentFrequency =
-      recentCount / recentWindow.length;
+      recentCount /
+      recent.length;
 
 
     /*
@@ -797,178 +1031,52 @@ function calculateSignal() {
 
     let gap;
 
-    if (lastSeen[d] === -1) {
+    if (
+      lastSeen[d] === -1
+    ) {
 
       gap = total;
 
     } else {
 
       gap =
-        total - 1 - lastSeen[d];
+        total -
+        1 -
+        lastSeen[d];
 
     }
 
 
     /*
-      Cap gap influence.
-    */
-
-    const gapScore =
-      Math.min(gap / 50, 1);
-
-
-    /*
-      Frequency deviation from theoretical 10%.
+      Statistical ranking only.
+      It is NOT a guaranteed
+      prediction probability.
     */
 
     const frequencyScore =
       Math.min(
-        Math.abs(frequency - 0.10) * 5,
+        Math.abs(
+          overall - 0.10
+        ) * 500,
         1
       );
 
 
-    /*
-      Recent score.
-    */
-
     const recentScore =
       Math.min(
-        Math.abs(recentFrequency - 0.10) * 5,
+        Math.abs(
+          recentFrequency - 0.10
+        ) * 500,
+        1
+      );
+
+
+    const gapScore =
+      Math.min(
+        gap / 50,
         1
       );
 
 
     const score =
-      (
-        frequencyScore * 40 +
-        recentScore * 35 +
-        gapScore * 25
-      );
-
-
-    scores.push({
-
-      digit: d,
-
-      score: score
-
-    });
-
-  }
-
-
-  scores.sort(
-    (a,b) => b.score - a.score
-  );
-
-
-  const best = scores[0];
-
-
-  document.getElementById("signalDigit").textContent =
-    best.digit;
-
-
-  document.getElementById("signalScore").textContent =
-    "Statistical signal score: " +
-    best.score.toFixed(1) +
-    "/100";
-
-}
-
-
-function renderDigits() {
-
-  const container =
-    document.getElementById("digits");
-
-  container.innerHTML = "";
-
-
-  const total = ticks.length;
-
-
-  for (let d = 0; d <= 9; d++) {
-
-    const percent =
-      total > 0
-        ? (counts[d] / total * 100)
-        : 0;
-
-
-    const box =
-      document.createElement("div");
-
-    box.className = "digit-box";
-
-
-    box.innerHTML =
-
-      '<div class="digit-number">' +
-      d +
-      '</div>' +
-
-      '<div>' +
-      counts[d] +
-      ' matches' +
-      '</div>' +
-
-      '<div class="digit-percent">' +
-      percent.toFixed(1) +
-      '%' +
-      '</div>';
-
-
-    container.appendChild(box);
-
-  }
-
-}
-
-
-function renderRecent() {
-
-  const recent =
-    ticks.slice(-30);
-
-  document.getElementById("recent").textContent =
-    recent.length
-      ? recent.join("  ")
-      : "Waiting for data...";
-
-}
-
-
-/*
-  Keep the WebSocket alive.
-*/
-
-setInterval(function() {
-
-  if (
-    socket &&
-    socket.readyState === WebSocket.OPEN
-  ) {
-
-    socket.send(
-      JSON.stringify({
-        ping: 1
-      })
-    );
-
-  }
-
-}, 30000);
-
-
-/*
-  Render empty digit boxes on startup.
-*/
-
-renderDigits();
-
-</script>
-
-</body>
-</html>
+      frequency
