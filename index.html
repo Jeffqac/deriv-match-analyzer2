@@ -2,288 +2,332 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Deriv Digit Match Analyzer</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Deriv Match Analyzer</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#080d18;
+color:white;
+padding:15px
 }
 
-body {
-  margin: 0;
-  background: #080b12;
-  color: #fff;
-  font-family: Arial, sans-serif;
+.app{
+max-width:700px;
+margin:auto
 }
 
-.container {
-  max-width: 700px;
-  margin: auto;
-  padding: 18px;
+h1{
+text-align:center;
+margin:5px 0
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 5px;
+.sub{
+text-align:center;
+color:#9ca8c0;
+margin-bottom:18px
 }
 
-.subtitle {
-  text-align: center;
-  color: #9aa4b2;
-  margin-bottom: 20px;
+.box{
+background:#121a2b;
+border-radius:15px;
+padding:16px;
+margin-bottom:14px
 }
 
-.card {
-  background: #111722;
-  border: 1px solid #293242;
-  border-radius: 15px;
-  padding: 16px;
-  margin-bottom: 15px;
+select,button{
+width:100%;
+padding:15px;
+border:0;
+border-radius:10px;
+font-size:16px
 }
 
-label {
-  display: block;
-  color: #aeb7c5;
-  margin-bottom: 7px;
+select{
+background:#222d46;
+color:white;
+margin-top:7px;
+margin-bottom:12px
 }
 
-select,
-button {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: 0;
-  font-size: 16px;
+button{
+background:#00c878;
+color:white;
+font-weight:bold
 }
 
-select {
-  background: #1b2330;
-  color: white;
-  margin-bottom: 12px;
+button:active{
+transform:scale(.98)
 }
 
-button {
-  background: #00c853;
-  color: white;
-  font-weight: bold;
+.status{
+padding:13px;
+border-radius:10px;
+background:#222d46;
+text-align:center;
+font-weight:bold;
+margin-bottom:14px
 }
 
-.status {
-  text-align: center;
-  padding: 13px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  background: #171d28;
+.match-title{
+text-align:center;
+color:#9ca8c0;
+font-size:13px
 }
 
-.green {
-  color: #00e676;
+.match{
+font-size:70px;
+font-weight:bold;
+text-align:center;
+margin:4px
 }
 
-.yellow {
-  color: #ffd740;
+.center{text-align:center}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:7px;
+margin-top:12px
 }
 
-.red {
-  color: #ff5252;
+.digit{
+background:#202b43;
+padding:10px 4px;
+border-radius:8px;
+text-align:center
 }
 
-.signal {
-  text-align: center;
-  background: #151c29;
-  border-radius: 14px;
-  padding: 20px;
+.digit b{
+font-size:19px;
+display:block
 }
 
-.signalDigit {
-  font-size: 72px;
-  font-weight: bold;
-  margin: 10px;
+.digit span{
+font-size:12px;
+color:#aeb8cc
 }
 
-.score {
-  color: #00e676;
+.row{
+display:flex;
+justify-content:space-between;
+padding:7px 0;
+border-bottom:1px solid #263149
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+.row:last-child{
+border-bottom:0
 }
 
-.stat {
-  background: #171e2b;
-  border-radius: 10px;
-  padding: 12px;
+.value{
+font-weight:bold
 }
 
-.statTitle {
-  color: #8f99a8;
-  font-size: 13px;
+.recent{
+background:#080d18;
+border-radius:9px;
+padding:12px;
+line-height:1.8;
+word-break:break-word;
+min-height:45px
 }
 
-.statValue {
-  font-size: 19px;
-  font-weight: bold;
-  margin-top: 5px;
+.note{
+font-size:12px;
+color:#8793aa;
+line-height:1.5
 }
 
-.digits {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 7px;
-}
-
-.digit {
-  background: #171e2b;
-  border-radius: 9px;
-  text-align: center;
-  padding: 10px 3px;
-}
-
-.digitNumber {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.small {
-  color: #9ca3af;
-  font-size: 11px;
-}
-
-.recent {
-  line-height: 2;
-  word-break: break-word;
-}
-
-.error {
-  color: #ff5252;
-  font-size: 13px;
-  margin-top: 12px;
-  word-break: break-word;
+.error{
+color:#ff7070
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
+<div class="app">
 
-<h1>Deriv Digit Match Analyzer</h1>
+<h1>DERIV MATCH ANALYZER</h1>
 
-<div class="subtitle">
-Live Volatility Index Analysis
+<div class="sub">
+Live Digit & Tick Scanner
 </div>
 
-<div class="card">
+<div class="box">
 
-<label>Select Market</label>
+<label>Select Volatility Market</label>
 
 <select id="market">
 
-<option value="1HZ100V">
-Volatility 100 Index
-</option>
-
-<option value="1HZ75V">
-Volatility 75 Index
-</option>
-
-<option value="1HZ50V">
-Volatility 50 Index
+<option value="1HZ10V">
+Volatility 10 (1s)
 </option>
 
 <option value="1HZ25V">
-Volatility 25 Index
+Volatility 25 (1s)
 </option>
 
-<option value="1HZ10V">
-Volatility 10 Index
+<option value="1HZ50V">
+Volatility 50 (1s)
+</option>
+
+<option value="1HZ75V">
+Volatility 75 (1s)
+</option>
+
+<option value="1HZ100V" selected>
+Volatility 100 (1s)
 </option>
 
 </select>
 
-<button id="analyze">
+<button
+type="button"
+onclick="ANALYZE_NOW()">
+
 ANALYZE
+
 </button>
 
 </div>
 
-<div id="status" class="status yellow">
-Ready — press ANALYZE
-</div>
 
-<div class="card signal">
+<div id="status" class="status">
 
-<div>BEST MATCH CANDIDATE</div>
-
-<div id="signalDigit" class="signalDigit">
--
-</div>
-
-<div id="score" class="score">
-Waiting for live ticks
-</div>
+READY — PRESS ANALYZE
 
 </div>
 
-<div class="card">
+
+<div class="box">
+
+<div class="match-title">
+CURRENT MATCH CANDIDATE
+</div>
+
+<div id="match" class="match">
+—
+</div>
+
+<div id="signal" class="center">
+Waiting for analysis...
+</div>
+
+</div>
+
+
+<div class="box">
+
+<div class="row">
+<span>Ticks received</span>
+<span id="ticks" class="value">0</span>
+</div>
+
+<div class="row">
+<span>Last price</span>
+<span id="price" class="value">—</span>
+</div>
+
+<div class="row">
+<span>Last digit</span>
+<span id="last" class="value">—</span>
+</div>
+
+<div class="row">
+<span>Latest jump</span>
+<span id="jump" class="value">—</span>
+</div>
+
+<div class="row">
+<span>Average jump</span>
+<span id="average" class="value">—</span>
+</div>
+
+</div>
+
+
+<div class="box">
+
+<b>Digit Match Percentages</b>
 
 <div class="grid">
 
-<div class="stat">
-<div class="statTitle">Market</div>
-<div id="marketName" class="statValue">-</div>
+<div class="digit">
+<b id="p0">0%</b>
+<span>DIGIT 0</span>
 </div>
 
-<div class="stat">
-<div class="statTitle">Ticks</div>
-<div id="tickCount" class="statValue">0</div>
+<div class="digit">
+<b id="p1">0%</b>
+<span>DIGIT 1</span>
 </div>
 
-<div class="stat">
-<div class="statTitle">Last Price</div>
-<div id="lastPrice" class="statValue">-</div>
+<div class="digit">
+<b id="p2">0%</b>
+<span>DIGIT 2</span>
 </div>
 
-<div class="stat">
-<div class="statTitle">Last Digit</div>
-<div id="lastDigit" class="statValue">-</div>
+<div class="digit">
+<b id="p3">0%</b>
+<span>DIGIT 3</span>
 </div>
 
-<div class="stat">
-<div class="statTitle">Current Gap</div>
-<div id="gap" class="statValue">-</div>
+<div class="digit">
+<b id="p4">0%</b>
+<span>DIGIT 4</span>
 </div>
 
-<div class="stat">
-<div class="statTitle">Average Jump</div>
-<div id="jump" class="statValue">-</div>
+<div class="digit">
+<b id="p5">0%</b>
+<span>DIGIT 5</span>
+</div>
+
+<div class="digit">
+<b id="p6">0%</b>
+<span>DIGIT 6</span>
+</div>
+
+<div class="digit">
+<b id="p7">0%</b>
+<span>DIGIT 7</span>
+</div>
+
+<div class="digit">
+<b id="p8">0%</b>
+<span>DIGIT 8</span>
+</div>
+
+<div class="digit">
+<b id="p9">0%</b>
+<span>DIGIT 9</span>
 </div>
 
 </div>
 
 </div>
 
-<div class="card">
 
-<h3>Digit Matches</h3>
+<div class="box">
 
-<div id="digits" class="digits"></div>
-
-</div>
-
-<div class="card">
-
-<h3>Recent Digits</h3>
+<b>Recent Ticks / Digits</b>
 
 <div id="recent" class="recent">
--
+Waiting for live ticks...
 </div>
 
-<div id="error" class="error"></div>
+</div>
+
+
+<div class="box">
+
+<div class="note">
+The match candidate is calculated from the digits received from the live market. It is a statistical signal, not a guarantee of the next digit.
+</div>
 
 </div>
 
@@ -294,789 +338,469 @@ Waiting for live ticks
 
 let socket = null;
 
-let symbol = "1HZ100V";
-
 let digitList = [];
 
 let priceList = [];
 
-let counts = new Array(10).fill(0);
-
-let lastSeen = new Array(10).fill(-1);
-
-let reconnectTimer = null;
-
-let reconnectAttempts = 0;
-
-const MAX_TICKS = 500;
+let totalTicks = 0;
 
 
-/* =========================
-   STATUS
-========================= */
+/* ================================
+   MAIN ANALYZE BUTTON
+================================ */
 
-function setStatus(text, type) {
+function ANALYZE_NOW(){
 
-  const el =
-    document.getElementById("status");
+const status =
+document.getElementById("status");
 
-  el.textContent = text;
-
-  el.className =
-    "status " + type;
-
-}
+const market =
+document.getElementById("market").value;
 
 
-function setError(text) {
+/* THIS MUST CHANGE IMMEDIATELY */
 
-  document.getElementById("error").textContent =
-    text || "";
-
-}
+status.innerHTML =
+"STARTING ANALYSIS...";
 
 
-/* =========================
-   RESET
-========================= */
+document.getElementById("signal").innerHTML =
+"Connecting to Deriv...";
 
-function resetAnalyzer() {
 
-  digitList = [];
+document.getElementById("match").innerHTML =
+"—";
 
-  priceList = [];
 
-  counts = new Array(10).fill(0);
+digitList = [];
 
-  lastSeen = new Array(10).fill(-1);
+priceList = [];
 
-  document.getElementById("tickCount").textContent = "0";
+totalTicks = 0;
 
-  document.getElementById("lastPrice").textContent = "-";
+updateNumbers();
 
-  document.getElementById("lastDigit").textContent = "-";
 
-  document.getElementById("gap").textContent = "-";
+/* Close previous connection */
 
-  document.getElementById("jump").textContent = "-";
+if(socket){
 
-  document.getElementById("signalDigit").textContent = "-";
+try{
 
-  document.getElementById("score").textContent =
-    "Waiting for live ticks";
+socket.close();
 
-  document.getElementById("recent").textContent = "-";
-
-  setError("");
-
-  renderDigits();
+}catch(e){}
 
 }
 
 
-/* =========================
-   CONNECT
-========================= */
+status.innerHTML =
+"CONNECTING TO DERIV...";
 
-function connect() {
 
-  if (socket) {
+/* ================================
+   DERIV WEBSOCKET
+================================ */
 
-    try {
-      socket.close();
-    } catch (e) {}
+try{
 
-  }
+socket =
+new WebSocket(
+"wss://ws.binaryws.com/websockets/v3"
+);
 
-  clearTimeout(reconnectTimer);
+}catch(error){
 
-  setStatus(
-    "Connecting to Deriv...",
-    "yellow"
-  );
+status.innerHTML =
+"WEBSOCKET COULD NOT START";
 
-  setError("");
+document.getElementById("signal").innerHTML =
+error.message;
 
-
-  /*
-    This is the public WebSocket
-    endpoint shown in Deriv's
-    official browser examples.
-  */
-
-  socket = new WebSocket(
-    "wss://ws.binaryws.com/websockets/v3"
-  );
-
-
-  socket.onopen = function() {
-
-    reconnectAttempts = 0;
-
-    setStatus(
-      "Connected — receiving live ticks",
-      "green"
-    );
-
-
-    /*
-      Direct tick subscription.
-
-      No login.
-      No token.
-      No App ID.
-      No backend.
-    */
-
-    socket.send(
-      JSON.stringify({
-
-        ticks: symbol,
-
-        subscribe: 1,
-
-        req_id: 1
-
-      })
-    );
-
-
-    /*
-      Also request recent history
-      to populate the analyzer faster.
-    */
-
-    socket.send(
-      JSON.stringify({
-
-        ticks_history: symbol,
-
-        count: 100,
-
-        end: "latest",
-
-        style: "ticks",
-
-        req_id: 2
-
-      })
-    );
-
-  };
-
-
-  socket.onmessage = function(event) {
-
-    let data;
-
-    try {
-
-      data =
-        JSON.parse(event.data);
-
-    } catch (e) {
-
-      return;
-
-    }
-
-
-    /*
-      Show the REAL Deriv error.
-    */
-
-    if (data.error) {
-
-      setStatus(
-        "Deriv returned an error",
-        "red"
-      );
-
-      setError(
-        data.error.message ||
-        JSON.stringify(data.error)
-      );
-
-      return;
-
-    }
-
-
-    /*
-      Historical data.
-    */
-
-    if (
-      data.msg_type === "history" &&
-      data.history
-    ) {
-
-      const prices =
-        data.history.prices || [];
-
-      for (
-        let i = 0;
-        i < prices.length;
-        i++
-      ) {
-
-        processTick(
-          prices[i],
-          false
-        );
-
-      }
-
-      return;
-
-    }
-
-
-    /*
-      Live tick.
-    */
-
-    if (
-      data.msg_type === "tick" &&
-      data.tick
-    ) {
-
-      processTick(
-        data.tick.quote,
-        true
-      );
-
-    }
-
-  };
-
-
-  socket.onerror = function() {
-
-    setStatus(
-      "WebSocket connection error",
-      "red"
-    );
-
-    setError(
-      "Your browser/network could not establish the Deriv WebSocket connection."
-    );
-
-  };
-
-
-  socket.onclose = function() {
-
-    setStatus(
-      "Connection closed — reconnecting...",
-      "red"
-    );
-
-
-    /*
-      Automatically reconnect.
-    */
-
-    reconnectAttempts++;
-
-    const delay =
-      Math.min(
-        5000 * reconnectAttempts,
-        15000
-      );
-
-
-    clearTimeout(reconnectTimer);
-
-    reconnectTimer =
-      setTimeout(
-        connect,
-        delay
-      );
-
-  };
+return;
 
 }
 
 
-/* =========================
-   PROCESS TICK
-========================= */
+/* CONNECTION OPEN */
 
-function processTick(
-  quote,
-  live
-) {
+socket.onopen = function(){
 
-  const price =
-    Number(quote);
-
-  if (
-    !Number.isFinite(price)
-  ) {
-
-    return;
-
-  }
+status.innerHTML =
+"CONNECTED — SCANNING";
 
 
-  /*
-    Deriv's Volatility Index
-    quote normally contains decimal
-    places.
-
-    We take the final displayed
-    decimal digit.
-  */
-
-  const text =
-    String(quote);
-
-  let digit;
+document.getElementById("signal").innerHTML =
+"Receiving live ticks...";
 
 
-  if (
-    text.includes(".")
-  ) {
+/* Subscribe to live ticks */
 
-    const decimals =
-      text.split(".")[1];
+socket.send(
+JSON.stringify({
 
-    if (
-      decimals &&
-      decimals.length > 0
-    ) {
+ticks:market,
 
-      digit =
-        Number(
-          decimals[
-            decimals.length - 1
-          ]
-        );
+subscribe:1,
 
-    }
+req_id:1
 
-  }
+})
+);
+
+};
 
 
-  /*
-    Fallback.
-  */
+/* RECEIVING DATA */
 
-  if (
-    !Number.isInteger(digit) ||
-    digit < 0 ||
-    digit > 9
-  ) {
+socket.onmessage = function(event){
 
-    digit =
-      Math.abs(
-        Math.round(price * 100)
-      ) % 10;
+let data;
 
-  }
+try{
 
+data =
+JSON.parse(event.data);
 
-  digitList.push(digit);
+}catch(error){
 
-  priceList.push(price);
-
-  counts[digit]++;
-
-  lastSeen[digit] =
-    digitList.length - 1;
-
-
-  /*
-    Keep only the newest
-    500 ticks.
-  */
-
-  if (
-    digitList.length >
-    MAX_TICKS
-  ) {
-
-    const removed =
-      digitList.shift();
-
-    counts[removed]--;
-
-    lastSeen =
-      new Array(10).fill(-1);
-
-    for (
-      let i = 0;
-      i < digitList.length;
-      i++
-    ) {
-
-      lastSeen[
-        digitList[i]
-      ] = i;
-
-    }
-
-  }
-
-
-  if (
-    priceList.length >
-    MAX_TICKS
-  ) {
-
-    priceList.shift();
-
-  }
-
-
-  updateScreen();
+return;
 
 }
 
 
-/* =========================
-   UPDATE SCREEN
-========================= */
+/* Deriv error */
 
-function updateScreen() {
+if(data.error){
 
-  document.getElementById(
-    "tickCount"
-  ).textContent =
-    digitList.length;
+status.innerHTML =
+"DERIV ERROR";
 
+document.getElementById("signal").innerHTML =
+data.error.message;
 
-  if (priceList.length) {
-
-    document.getElementById(
-      "lastPrice"
-    ).textContent =
-      priceList[
-        priceList.length - 1
-      ];
-
-  }
-
-
-  if (digitList.length) {
-
-    document.getElementById(
-      "lastDigit"
-    ).textContent =
-      digitList[
-        digitList.length - 1
-      ];
-
-  }
-
-
-  calculateGap();
-
-  calculateJump();
-
-  renderDigits();
-
-  renderRecent();
-
-  calculateSignal();
+return;
 
 }
 
 
-/* =========================
-   GAP
-========================= */
+/* Tick */
 
-function calculateGap() {
+if(
+data.msg_type === "tick" &&
+data.tick
+){
 
-  if (!digitList.length) {
-    return;
-  }
+readTick(data.tick);
 
-  const lastDigit =
-    digitList[
-      digitList.length - 1
-    ];
+}
 
-  const gap =
-    digitList.length -
-    1 -
-    lastSeen[lastDigit];
+};
 
-  document.getElementById(
-    "gap"
-  ).textContent =
-    gap;
+
+/* CONNECTION ERROR */
+
+socket.onerror = function(){
+
+status.innerHTML =
+"CONNECTION ERROR";
+
+document.getElementById("signal").innerHTML =
+"Could not connect to Deriv.";
+
+};
+
+
+/* CONNECTION CLOSED */
+
+socket.onclose = function(){
+
+if(totalTicks === 0){
+
+status.innerHTML =
+"DISCONNECTED — NO TICKS RECEIVED";
+
+}else{
+
+status.innerHTML =
+"DISCONNECTED";
+
+}
+
+};
 
 }
 
 
-/* =========================
-   JUMP
-========================= */
+/* ================================
+   READ TICK
+================================ */
 
-function calculateJump() {
+function readTick(tick){
 
-  if (
-    priceList.length < 2
-  ) {
+const quote =
+Number(tick.quote);
 
-    document.getElementById(
-      "jump"
-    ).textContent = "-";
+if(!Number.isFinite(quote)){
 
-    return;
-
-  }
-
-
-  let total = 0;
-
-  let number = 0;
-
-  const start =
-    Math.max(
-      1,
-      priceList.length - 100
-    );
-
-
-  for (
-    let i = start;
-    i < priceList.length;
-    i++
-  ) {
-
-    total +=
-      Math.abs(
-        priceList[i] -
-        priceList[i - 1]
-      );
-
-    number++;
-
-  }
-
-
-  document.getElementById(
-    "jump"
-  ).textContent =
-    (total / number).toFixed(5);
+return;
 
 }
 
 
-/* =========================
-   DIGIT TABLE
-========================= */
+/*
+Use the displayed quote to obtain
+the final digit.
+*/
 
-function renderDigits() {
+const quoteText =
+String(tick.quote);
 
-  const box =
-    document.getElementById(
-      "digits"
-    );
+const clean =
+quoteText.replace(".","");
 
-  box.innerHTML = "";
-
-
-  const total =
-    digitList.length;
+const digit =
+Number(clean.slice(-1));
 
 
-  for (
-    let d = 0;
-    d <= 9;
-    d++
-  ) {
+if(!Number.isInteger(digit)){
 
-    const percent =
-      total
-        ? (
-            counts[d] /
-            total *
-            100
-          )
-        : 0;
-
-
-    const item =
-      document.createElement(
-        "div"
-      );
-
-    item.className =
-      "digit";
-
-
-    item.innerHTML =
-
-      "<div class='digitNumber'>" +
-      d +
-      "</div>" +
-
-      "<div>" +
-      counts[d] +
-      " matches" +
-      "</div>" +
-
-      "<div class='small'>" +
-      percent.toFixed(1) +
-      "%</div>";
-
-
-    box.appendChild(item);
-
-  }
+return;
 
 }
 
 
-/* =========================
-   RECENT DIGITS
-========================= */
+/* Save */
 
-function renderRecent() {
+digitList.push(digit);
 
-  const recent =
-    digitList.slice(-30);
+priceList.push(quote);
+
+totalTicks++;
 
 
-  document.getElementById(
-    "recent"
-  ).textContent =
-    recent.length
-      ? recent.join(" • ")
-      : "-";
+/* Keep latest 200 */
+
+if(digitList.length > 200){
+
+digitList.shift();
+
+}
+
+if(priceList.length > 200){
+
+priceList.shift();
 
 }
 
 
-/* =========================
-   MATCH SIGNAL
-========================= */
+/* Update */
 
-function calculateSignal() {
+updateNumbers();
 
-  if (
-    digitList.length < 30
-  ) {
+calculateMatch();
 
-    document.getElementById(
-      "signalDigit"
-    ).textContent =
-      "-";
-
-    document.getElementById(
-      "score"
-    ).textContent =
-      "Collecting ticks: " +
-      digitList.length +
-      "/30";
-
-    return;
-
-  }
+}
 
 
-  const total =
-    digitList.length;
+/* ================================
+   UPDATE NUMBERS
+================================ */
 
-  const recent =
-    digitList.slice(-50);
+function updateNumbers(){
 
-  let results = [];
-
-
-  for (
-    let d = 0;
-    d <= 9;
-    d++
-  ) {
-
-    /*
-      Overall frequency.
-    */
-
-    const overall =
-      counts[d] / total;
+document.getElementById("ticks").innerHTML =
+totalTicks;
 
 
-    /*
-      Recent frequency.
-    */
+if(priceList.length){
 
-    let recentCount = 0;
+document.getElementById("price").innerHTML =
+priceList[priceList.length-1];
 
-    for (
-      const value of recent
-    ) {
+document.getElementById("last").innerHTML =
+digitList[digitList.length-1];
 
-      if (value === d) {
-        recentCount++;
-      }
-
-    }
+}
 
 
-    const recentFrequency =
-      recentCount /
-      recent.length;
+/* Jump */
+
+if(priceList.length >= 2){
+
+const n =
+priceList.length;
+
+const jump =
+Math.abs(
+priceList[n-1] -
+priceList[n-2]
+);
+
+document.getElementById("jump").innerHTML =
+jump.toFixed(5);
 
 
-    /*
-      Gap.
-    */
+/* Average */
 
-    let gap;
+let total = 0;
 
-    if (
-      lastSeen[d] === -1
-    ) {
+for(
+let i=1;
+i<priceList.length;
+i++
+){
 
-      gap = total;
+total +=
+Math.abs(
+priceList[i] -
+priceList[i-1]
+);
 
-    } else {
+}
 
-      gap =
-        total -
-        1 -
-        lastSeen[d];
-
-    }
-
-
-    /*
-      Statistical ranking only.
-      It is NOT a guaranteed
-      prediction probability.
-    */
-
-    const frequencyScore =
-      Math.min(
-        Math.abs(
-          overall - 0.10
-        ) * 500,
-        1
-      );
+const avg =
+total /
+(priceList.length-1);
 
 
-    const recentScore =
-      Math.min(
-        Math.abs(
-          recentFrequency - 0.10
-        ) * 500,
-        1
-      );
+document.getElementById("average").innerHTML =
+avg.toFixed(5);
+
+}
 
 
-    const gapScore =
-      Math.min(
-        gap / 50,
-        1
-      );
+/* Recent digits */
+
+document.getElementById("recent").innerHTML =
+digitList
+.slice(-50)
+.join(" ");
+
+}
 
 
-    const score =
-      frequency
+/* ================================
+   MATCH ANALYSIS
+================================ */
+
+function calculateMatch(){
+
+if(digitList.length < 10){
+
+document.getElementById("signal").innerHTML =
+"SCANNING — " +
+digitList.length +
+"/10 ticks";
+
+return;
+
+}
+
+
+const counts =
+[
+0,0,0,0,0,
+0,0,0,0,0
+];
+
+
+/* Count digits */
+
+for(
+let i=0;
+i<digitList.length;
+i++
+){
+
+counts[digitList[i]]++;
+
+}
+
+
+const total =
+digitList.length;
+
+
+/* Percentages */
+
+for(
+let i=0;
+i<10;
+i++
+){
+
+const percentage =
+(counts[i]/total)*100;
+
+document.getElementById(
+"p"+i
+).innerHTML =
+percentage.toFixed(1)+"%";
+
+}
+
+
+/* Find highest */
+
+let bestDigit = 0;
+
+let bestCount = counts[0];
+
+
+for(
+let i=1;
+i<10;
+i++
+){
+
+if(
+counts[i] >
+bestCount
+){
+
+bestCount =
+counts[i];
+
+bestDigit =
+i;
+
+}
+
+}
+
+
+const score =
+(bestCount/total)*100;
+
+
+document.getElementById("match").innerHTML =
+bestDigit;
+
+
+document.getElementById("signal").innerHTML =
+"Current strongest match: DIGIT " +
+bestDigit +
+" — " +
+score.toFixed(1) +
+"% (" +
+bestCount +
+"/" +
+total +
+" ticks)";
+
+}
+
+
+/* ================================
+   PAGE LOADED
+================================ */
+
+console.log(
+"DERIV MATCH ANALYZER LOADED"
+);
+
+</script>
+
+</body>
+</html>
